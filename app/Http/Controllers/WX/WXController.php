@@ -23,7 +23,7 @@ class WXController extends Controller
     }
 
 
-    public function info()
+    public function phpinfo()
     {
         phpinfo();
     }
