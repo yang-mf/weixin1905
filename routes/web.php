@@ -14,3 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/wx','WX\WXController@wx');
+Route::get('/phpinfo','WX\WXController@phpinfo');
+Route::get('/receiv','WX\WXController@receiv');
+
+
+
+
