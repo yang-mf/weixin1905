@@ -51,7 +51,7 @@ class WXController extends Controller
 
     public function receiv()
     {
-        $log_file = "wx. log";
+        $log_file = "wx.log";
         //将接收的数据记录到日志文件
         $xml_str = file_get_contents("php://input");
         $data = date('Y-m-d H:i:s') . $xml_str;
@@ -63,7 +63,7 @@ class WXController extends Controller
         if ($event == 'subscribe') {
             $openid = $xml_obj->FromUserName;  //获取用户的openid
             //获取用户信息
-            $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->getaccess_token() . '&openid=' . $openid . '&lang=zh_CN';
+            $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
             $user_info = file_get_contents($url);
             file_put_contents('wx_user.log', $user_info, FILE_APPEND);
         }
