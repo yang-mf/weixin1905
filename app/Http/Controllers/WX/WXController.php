@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WX;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\wxmodel;
 
 class WXController extends Controller
 {
@@ -68,27 +69,21 @@ class WXController extends Controller
 
         $event = $xml_obj->Event;
 
-        $openid = $xml_obj->FromUserName;  //获取用户的openid
-        //获取用户信息
-        $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
-        $user_info = file_get_contents($url);
         if ($event == 'subscribe') {
-            file_put_contents('wx_user.log', $user_info, FILE_APPEND);
+            $openid = $xml_obj->FromUserName;  //获取用户的openid
             $data=[
-                'openid'=>$user_info['openid'],
-                'sex'=>$user_info['sex'],
-                'nickname'=>$user_info['nickname'],
-                'create_at'=>time(),
+                'openid'    =>$openid,
+                'sub_time'  =>$xml_obj->CreateTime,
             ];
-            $res=DB::table('user')->create($data);
-        }else{
-            $data=[
-                'openid'=>$user_info['openid'],
-                'sex'=>$user_info['sex'],
-                'nickname'=>$user_info['nickname'],
-                'update_at'=>time(),
-            ];
-            $res=DB::table('user')->create($data);
+            //openid入库
+            $uid=wxmodel::insertGetId($data);
+            dd($uid);
+            die;
+
+                //获取用户信息
+                $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
+                $user_info = file_get_contents($url);
+                file_put_contents('wx_user.log', $user_info, FILE_APPEND);
         }
 
           //判断消息类型
