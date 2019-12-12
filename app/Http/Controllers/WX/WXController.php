@@ -22,7 +22,6 @@ class WXController extends Controller
         return $arr['access_token'];
     }
 
-
     public function phpinfo()
     {
         phpinfo();
@@ -52,40 +51,54 @@ class WXController extends Controller
     public function receiv()
     {
         $log_file = "wx.log";
-        //将接收的数据记录到日志文件
+                //将接收的数据记录到日志文件
         $xml_str = file_get_contents("php://input");
         $data = date('Y-m-d H:i:s') . $xml_str;
         file_put_contents($log_file, $data, FILE_APPEND);//追加写
 
         $xml_obj = simplexml_load_string($xml_str);
-//        dd($xml_obj);
+
         $event = $xml_obj->Event;
+
+        $xml_str = file_get_contents("php://input");
+        $data = date('Y-m-d H:i:s') . $xml_str;
+        file_put_contents($log_file, $data, FILE_APPEND);//追加写
+
+        $xml_obj = simplexml_load_string($xml_str);
+
+        $event = $xml_obj->Event;
+
         if ($event == 'subscribe') {
+
             $openid = $xml_obj->FromUserName;  //获取用户的openid
-            //获取用户信息
-            $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
-            $user_info = file_get_contents($url);
-            file_put_contents('wx_user.log', $user_info, FILE_APPEND);
+                //获取用户信息
+                $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
+                $user_info = file_get_contents($url);
+                file_put_contents('wx_user.log', $user_info, FILE_APPEND);
+
+
         }
 
-        //判断消息类型
+          //判断消息类型
         $msg_type = $xml_obj->MsgType;
 
         $touser = $xml_obj->FromUserName;         //接收消息的用户的id
         $formuser = $xml_obj->ToUserName;         //开发者公众号的ID
         $time = time();
-        $content = date('Y-m-d H:i:s') . $xml_obj->Content;
+        $content = date('Y-m-d H:i:s').$xml_obj->Content;
+
 
 
         if ($msg_type == 'text') {
-            $response_text = '<xml>
-      <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
-      <FromUserName><![CDATA[' . $formuser . ']]></FromUserName>
-      <CreateTime>' . $time . '</CreateTime>
-      <MsgType><![CDATA[event]]></MsgType>
-      <Event><![CDATA[' . $content . ']]></Event>
+              $response_text = '<xml>
+        <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
+        <FromUserName><![CDATA[' . $formuser . ']]></FromUserName>
+        <CreateTime>' . $time . '</CreateTime> 
+        <MsgType><![CDATA[event]]></MsgType>
+        <Event><![CDATA[' . $content . ']]></Event>
         </xml>';
-            echo $response_text;        //回复用户消息
+                 echo $response_text;        //回复用户消息
+
         }
 
     }
