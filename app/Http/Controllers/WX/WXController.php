@@ -85,8 +85,8 @@ class WXController extends Controller
         $touser = $xml_obj->FromUserName;         //接收消息的用户的id
         $formuser = $xml_obj->ToUserName;         //开发者公众号的ID
         $time = time();
-        $content = date('Y-m-d H:i:s').$xml_obj->Content;
 
+        $content = date('Y-m-d H:i:s').$xml_obj->Content;
 
 
         if ($msg_type == 'text') {
@@ -94,9 +94,10 @@ class WXController extends Controller
         <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
         <FromUserName><![CDATA[' . $formuser . ']]></FromUserName>
         <CreateTime>' . $time . '</CreateTime> 
-        <MsgType><![CDATA[event]]></MsgType>
-        <Event><![CDATA[' . $content . ']]></Event>
+        <MsgType><![CDATA[text]]></MsgType>
+        <Content><![CDATA[' . $content . ']]></Content>
         </xml>';
+
                  echo $response_text;        //回复用户消息
 
         }
