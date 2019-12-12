@@ -68,15 +68,27 @@ class WXController extends Controller
 
         $event = $xml_obj->Event;
 
+        $openid = $xml_obj->FromUserName;  //获取用户的openid
+        //获取用户信息
+        $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
+        $user_info = file_get_contents($url);
         if ($event == 'subscribe') {
-
-            $openid = $xml_obj->FromUserName;  //获取用户的openid
-                //获取用户信息
-                $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
-                $user_info = file_get_contents($url);
-                file_put_contents('wx_user.log', $user_info, FILE_APPEND);
-
-
+            file_put_contents('wx_user.log', $user_info, FILE_APPEND);
+            $data=[
+                'openid'=>$user_info['openid'],
+                'sex'=>$user_info['sex'],
+                'nickname'=>$user_info['nickname'],
+                'create_at'=>time(),
+            ];
+            $res=DB::table('user')->create($data);
+        }else{
+            $data=[
+                'openid'=>$user_info['openid'],
+                'sex'=>$user_info['sex'],
+                'nickname'=>$user_info['nickname'],
+                'update_at'=>time(),
+            ];
+            $res=DB::table('user')->create($data);
         }
 
           //判断消息类型
