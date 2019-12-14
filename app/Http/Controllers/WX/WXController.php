@@ -62,22 +62,19 @@ class WXController extends Controller
 
         $event = $xml_obj->Event;
 
-        //判断消息类型
-        $msg_type = $xml_obj->MsgType;
-        $touser = $xml_obj->FromUserName;         //接收消息的用户的id
-        $formuser = $xml_obj->ToUserName;         //开发者公众号的ID
-        $time = time();
+
         $content = date('Y-m-d H:i:s') . $xml_obj->Content;
 
         if ($event == 'subscribe') {
             $openid = $xml_obj->FromUserName;  //获取用户的openid
             $res = wxmodel::where(['openid' => $openid])->first();
+            dd($res);
             if ($res) {
                 $content = '欢迎回来';
                 $response_text = '<xml>
-                        <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
-                        <FromUserName><![CDATA[' . $formuser . ']]></FromUserName>
-                        <CreateTime>' . $time . '</CreateTime> 
+                        <ToUserName><![CDATA[' . $openid . ']]></ToUserName>
+                        <FromUserName><![CDATA[' . $xml_obj->ToUserName . ']]></FromUserName>
+                        <CreateTime>' . time() . '</CreateTime> 
                         <MsgType><![CDATA[text]]></MsgType>
                         <Content><![CDATA[' . $content . ']]></Content>
                         </xml>';
@@ -100,15 +97,22 @@ class WXController extends Controller
 
                 $content = '欢迎关注';
                 $response_text = '<xml>
-                        <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
-                        <FromUserName><![CDATA[' . $formuser . ']]></FromUserName>
-                        <CreateTime>' . $time . '</CreateTime> 
+                        <ToUserName><![CDATA[' . $openid . ']]></ToUserName>
+                        <FromUserName><![CDATA[' . $xml_obj->ToUserName . ']]></FromUserName>
+                        <CreateTime>' . time() . '</CreateTime> 
                         <MsgType><![CDATA[text]]></MsgType>
                         <Content><![CDATA[' . $content . ']]></Content>
                         </xml>';
                 echo $response_text;        //回复用户消息
             }
         }
+
+        //判断消息类型
+        $msg_type = $xml_obj->MsgType;
+        $touser = $xml_obj->FromUserName;         //接收消息的用户的id
+        $formuser = $xml_obj->ToUserName;         //开发者公众号的ID
+        $time = time();
+
         if ($msg_type == 'text') {
             $response_text = '<xml>
         <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
