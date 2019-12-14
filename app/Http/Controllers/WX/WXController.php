@@ -52,6 +52,7 @@ class WXController extends Controller
 
     public function receiv()
     {
+        echo 123456789;die;
         $log_file = "wx.log";
         //将接收的数据记录到日志文件
         $xml_str = file_get_contents("php://input");
@@ -66,6 +67,7 @@ class WXController extends Controller
         $content = date('Y-m-d H:i:s') . $xml_obj->Content;
 
         if ($event == 'subscribe') {
+            dd(15415);
             $openid = $xml_obj->FromUserName;  //获取用户的openid
             $res = wxmodel::where(['openid' => $openid])->first();
             dd($res);
@@ -106,7 +108,7 @@ class WXController extends Controller
                 echo $response_text;        //回复用户消息
             }
         }
-
+        dd('esdfg');
         //判断消息类型
         $msg_type = $xml_obj->MsgType;
         $touser = $xml_obj->FromUserName;         //接收消息的用户的id
