@@ -68,16 +68,19 @@ class WXController extends Controller
         if ($event == 'subscribe') {
             $openid = $xml_obj->FromUserName;  //获取用户的openid
             $res = wxmodel::where(['openid' => $openid])->first();
-            if($res) {
-                dd(11);
+//            dd($res);
+            if(!empty($res)) {
+//                dd(11);
                 $content = '欢迎回来';
-                $response_text = '<xml>
-                        <ToUserName><![CDATA[' . $openid . ']]></ToUserName>
-                        <FromUserName><![CDATA[' . $xml_obj->ToUserName . ']]></FromUserName>
-                        <CreateTime>' . time() . '</CreateTime> 
-                        <MsgType><![CDATA[text]]></MsgType>
-                        <Content><![CDATA[' . $content . ']]></Content>
-                        </xml>';
+                $response_text =
+'<xml>
+    <ToUserName><![CDATA[' . $openid . ']]></ToUserName>
+    <FromUserName><![CDATA[' . $xml_obj->ToUserName . ']]></FromUserName>
+    <CreateTime>' . time() . '</CreateTime> 
+    <MsgType><![CDATA[text]]></MsgType>
+    <Content><![CDATA[' . $content . ']]></Content>
+</xml>';
+//                dd($response_text);
                 echo $response_text;        //回复用户消息
             } else {
                 //获取用户信息
@@ -89,7 +92,7 @@ class WXController extends Controller
                     'sub_time' => time(),
                     'sex' => $u['sex'],
                     'nickname' => $u['nickname'],
-                    'style' => '1',
+                    'img' => $u['headimgurl'],
                 ];
                 //openid入库
                 $uid = wxmodel::insertGetId($data);
