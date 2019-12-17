@@ -227,5 +227,30 @@ class WXController extends Controller
         file_put_contents($save_path,$file_content);
     }
 
+    /**
+     * 创建自定义菜单
+     */
+    public function createMenu()
+    {
+        //创建自定义菜单的接口地址
+        $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$this->access_token;
+        $menu = [
+            'button'    => [
+                [
+                    'type'  => 'click',
+                    'name'  => '1905wx',
+                    'key'   => '1905wx_key'
+                ],
+            ]
+        ];
+        $menu_json = json_encode($menu);
+        $client = new Client();
+        $response = $client->request('POST',$url,[
+            'body'  => $menu_json
+        ]);
+        echo '<pre>';print_r($menu);echo '</pre>';
+        echo $response->getBody();      //接收 微信接口的响应数据
+    }
+
 
 }
