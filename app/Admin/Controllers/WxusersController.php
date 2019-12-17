@@ -36,7 +36,7 @@ class WxusersController extends AdminController
             }else if($sex==2){
                 return '女';
             }else if($sex==0){
-                return '保密';
+                echo '保密';
             }
         });
         $grid->column('nickname', __('Nickname'));

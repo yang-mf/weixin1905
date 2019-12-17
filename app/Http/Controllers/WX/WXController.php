@@ -5,7 +5,11 @@ namespace App\Http\Controllers\WX;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\wxmodel;
+use App\wx\ImgModel;
+use App\wx\VideoModel;
+use App\wx\VoiceModel;
 
+use GuzzleHttp\Client;
 class WXController extends Controller
 {
     protected $access_token;
@@ -112,21 +116,116 @@ class WXController extends Controller
         //判断消息类型
         $msg_type = $xml_obj->MsgType;
         $touser = $xml_obj->FromUserName;         //接收消息的用户的id
-        $formuser = $xml_obj->ToUserName;         //开发者公众号的ID
+        $fromuser = $xml_obj->ToUserName;         //开发者公众号的ID
         $time = time();
+        $media_id=$xml_obj->MediaId;
+//        dd($media_id);
 
         if ($msg_type == 'text') {
             $response_text = '<xml>
         <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
-        <FromUserName><![CDATA[' . $formuser . ']]></FromUserName>
+        <FromUserName><![CDATA[' . $fromuser . ']]></FromUserName>
         <CreateTime>' . $time . '</CreateTime> 
         <MsgType><![CDATA[text]]></MsgType>
         <Content><![CDATA[' . $content . ']]></Content>
         </xml>';
-
             echo $response_text;        //回复用户消息
-
-
+        }elseif($msg_type=='image'){    // 图片消息
+            // TODO 下载图片
+            $this->getMedia2($media_id,$msg_type);
+            // TODO 回复图片
+            $response = '<xml>
+  <ToUserName><![CDATA['.$touser.']]></ToUserName>
+  <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
+  <CreateTime>'.time().'</CreateTime>
+  <MsgType><![CDATA[image]]></MsgType>
+  <Image>
+    <MediaId><![CDATA['.$media_id.']]></MediaId>
+  </Image>
+</xml>';
+            echo $response;
+        }elseif($msg_type=='voice'){          // 语音消息
+            // 下载语音
+            $this->getMedia2($media_id,$msg_type);
+            // TODO 回复语音
+            $response = '<xml>
+  <ToUserName><![CDATA['.$touser.']]></ToUserName>
+  <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
+  <CreateTime>'.time().'</CreateTime>
+  <MsgType><![CDATA[voice]]></MsgType>
+  <Voice>
+    <MediaId><![CDATA['.$media_id.']]></MediaId>
+  </Voice>
+</xml>';
+            echo $response;
+        }elseif($msg_type=='video'){
+            // 下载小视频
+            $this->getMedia2($media_id,$msg_type);
+            // 回复
+            $response = '<xml>
+  <ToUserName><![CDATA['.$touser.']]></ToUserName>
+  <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
+  <CreateTime>'.time().'</CreateTime>
+  <MsgType><![CDATA[video]]></MsgType>
+  <Video>
+    <MediaId><![CDATA['.$media_id.']]></MediaId>
+    <Title><![CDATA[测试]]></Title>
+    <Description><![CDATA[不可描述]]></Description>
+  </Video>
+</xml>';
+            echo $response;
         }
     }
+
+    public function getMedia($media_id)
+    {
+
+        $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token='.$this->access_token.'&media_id='.$media_id;
+        //获取素材内容
+        $data = file_get_contents($url);
+        // 保存文件
+        $file_name = date('YmdHis').mt_rand(11111,99999) . '.amr';
+        file_put_contents($file_name,$data);
+        echo "下载素材成功";echo '</br>';
+        echo "文件名： ". $file_name;
+    }
+
+
+    /**
+     * 获取素材
+     */
+    protected function getMedia2($media_id,$media_type)
+    {
+        $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token='.$this->access_token.'&media_id='.$media_id;
+        //获取素材内容
+        $client = new Client();
+        $response = $client->request('GET',$url);
+        //获取文件扩展名
+        $f = $response->getHeader('Content-disposition')[0];
+        $extension = substr(trim($f,'"'),strpos($f,'.'));
+        //获取文件内容
+        $file_content = $response->getBody();
+        // 保存文件
+        $save_path = 'wx_media/';
+        if($media_type=='image'){       //保存图片文件
+            $file_name = date('YmdHis').mt_rand(11111,99999) . $extension;
+            $save_path = $save_path . 'imgs/' . $file_name;
+            $data=['img'=>$save_path];
+            ImgModel::insert($data);
+        }elseif($media_type=='voice'){  //保存语音文件
+            $file_name = date('YmdHis').mt_rand(11111,99999) . $extension;
+            $save_path = $save_path . 'voice/' . $file_name;
+            $data=['text'=>$save_path];
+            voiceModel::insert($data);
+        }elseif($media_type=='video')
+        {
+            $file_name = date('YmdHis').mt_rand(11111,99999) . $extension;
+            $save_path = $save_path . 'video/' . $file_name;
+            $data=['text'=>$save_path];
+            VideoModel::insert($data);
+        }
+        file_put_contents($save_path,$file_content);
+    }
+
+
 }
