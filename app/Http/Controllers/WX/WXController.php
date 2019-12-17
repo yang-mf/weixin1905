@@ -215,13 +215,13 @@ class WXController extends Controller
         }elseif($media_type=='voice'){  //保存语音文件
             $file_name = date('YmdHis').mt_rand(11111,99999) . $extension;
             $save_path = $save_path . 'voice/' . $file_name;
-            $data=['text'=>$save_path];
+            $data=['voice'=>$save_path];
             voiceModel::insert($data);
         }elseif($media_type=='video')
         {
             $file_name = date('YmdHis').mt_rand(11111,99999) . $extension;
             $save_path = $save_path . 'video/' . $file_name;
-            $data=['text'=>$save_path];
+            $data=['video'=>$save_path];
             VideoModel::insert($data);
         }
         file_put_contents($save_path,$file_content);
