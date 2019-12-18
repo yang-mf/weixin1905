@@ -10,6 +10,8 @@ use App\wx\VideoModel;
 use App\wx\VoiceModel;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Redis;
+
 class WXController extends Controller
 {
     protected $access_token;
@@ -71,6 +73,7 @@ class WXController extends Controller
 
         if ($event == 'subscribe') {
             $openid = $xml_obj->FromUserName;  //获取用户的openid
+            Redis::set('openid',$openid);
             $res = wxmodel::where(['openid' => $openid])->first();
 //            dd($res);
             if(!empty($res)) {
@@ -248,6 +251,18 @@ class WXController extends Controller
         $response = $client->request('POST',$url,[
             'body'  => $menu_json
         ]);
+
+        $openid=Redis::get('openid');
+
+        $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
+        $user_info = file_get_contents($url);
+        $u = json_decode($user_info, true);
+        $location = $u[''];
+
+
+
+
+        $weather_url='https://api.heweather.net/s6/weather/now?location=beijing&key=f712ec7c6f9f411ab24962eeea845f9d';
         echo '<pre>';print_r($menu);echo '</pre>';
         echo $response->getBody();      //接收 微信接口的响应数据
     }
