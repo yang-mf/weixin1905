@@ -19,7 +19,7 @@ Route::get('/', function () {
 Route::get('/weixin','WX\WXController@wx');
 Route::get('/phpinfo','WX\WXController@phpinfo');
 Route::post('/wx','WX\WXController@receiv');
-
+Route::get('/wx/menu','WX\WXController@createMenu');        //创建菜单
 
 
 

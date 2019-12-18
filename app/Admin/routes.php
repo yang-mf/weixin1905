@@ -12,6 +12,5 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('admin.home');
     $router->resource('users', WxusersController::class);
-    $router->resource('createMenu', WxusersController::class);
 
 });
