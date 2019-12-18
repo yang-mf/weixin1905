@@ -238,12 +238,12 @@ class WXController extends Controller
             'button'    => [
                 [
                     'type'  => 'click',
-                    'name'  => '1905wx',
+                    'name'  => '获取天气',
                     'key'   => '1905wx_key'
                 ],
             ]
         ];
-        $menu_json = json_encode($menu);
+        $menu_json = json_encode($menu,JSON_UNESCAPED_UNICODE);
         $client = new Client();
         $response = $client->request('POST',$url,[
             'body'  => $menu_json
