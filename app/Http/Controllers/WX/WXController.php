@@ -120,23 +120,26 @@ class WXController extends Controller
                 echo $response_text;        //回复用户消息
             }
         }elseif($event=='CLICK'){
-            //如果是 获取天气
-            //请求第三方接口 获取天气
-            $weather_api = 'https://free-api.heweather.net/s6/weather/now?location=beijing&key=f712ec7c6f9f411ab24962eeea845f9d';
-            $weather_info = file_get_contents($weather_api);
-            $weather_info_arr = json_decode($weather_info,true);
-            $cond_txt = $weather_info_arr['HeWeather6'][0]['now']['cond_txt'];
-            $tmp = $weather_info_arr['HeWeather6'][0]['now']['tmp'];
-            $wind_dir = $weather_info_arr['HeWeather6'][0]['now']['wind_dir'];
-            $msg = $cond_txt . ' 温度： '.$tmp . ' 风向： '. $wind_dir;
-            $response_xml = '<xml>
-                <ToUserName><![CDATA['.$openid.']]></ToUserName>
+            if($xml_obj->EventKey=='weather'){
+                //如果是 获取天气
+                //请求第三方接口 获取天气
+                $weather_api = 'https://free-api.heweather.net/s6/weather/now?location=beijing&key=b2e92f2df77e48b3a36f20e912b796d9';
+                $weather_info = file_get_contents($weather_api);
+                $weather_info_arr = json_decode($weather_info,true);
+//                print_r($weather_info_arr);die;
+                $cond_txt = $weather_info_arr['HeWeather6'][0]['now']['cond_txt'];
+                $tmp = $weather_info_arr['HeWeather6'][0]['now']['tmp'];
+                $wind_dir = $weather_info_arr['HeWeather6'][0]['now']['wind_dir'];
+                $msg = $cond_txt . ' 温度： '.$tmp . ' 风向： '. $wind_dir;
+                $response_xml = '<xml>
+                <ToUserName><![CDATA['.$xml_obj->FromUserName.']]></ToUserName>
                 <FromUserName><![CDATA['.$xml_obj->ToUserName.']]></FromUserName>
                 <CreateTime>'.time().'</CreateTime>
                 <MsgType><![CDATA[text]]></MsgType>
                 <Content><![CDATA['. date('Y-m-d H:i:s') .  $msg .']]></Content>
                 </xml>';
-            echo $response_xml;
+                echo $response_xml;
+            }
         }
 
         //判断消息类型
