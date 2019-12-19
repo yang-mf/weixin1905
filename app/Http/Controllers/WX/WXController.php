@@ -122,7 +122,7 @@ class WXController extends Controller
         }elseif($event=='CLICK'){
             //如果是 获取天气
             //请求第三方接口 获取天气
-            $weather_api = 'https://free-api.heweather.net/s6/weather/now?location=beijing&key=d957029d5931428f8eef6ba241aefdd7';
+            $weather_api = 'https://free-api.heweather.net/s6/weather/now?location=beijing&key=f712ec7c6f9f411ab24962eeea845f9d';
             $weather_info = file_get_contents($weather_api);
             $weather_info_arr = json_decode($weather_info,true);
             $cond_txt = $weather_info_arr['HeWeather6'][0]['now']['cond_txt'];
