@@ -24,19 +24,24 @@ class WXController extends Controller
 
     public function getaccess_token()
     {
+        $key = 'wx_access_token';
+        $access_token = Redis::get($key);
+        if($access_token){
+            return $access_token;
+        }
+
         $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' . env('appid') . '&secret=' . env('secret');
 //        echo $url;die;
         $data_json = file_get_contents($url);
         $arr = json_decode($data_json, true);
+        Redis::set($key,$arr['access_token']);
+        Redis::expire($key,3600);
         return $arr['access_token'];
     }
-
     public function phpinfo()
     {
         phpinfo();
     }
-
-
     public function wx()
     {
         $token = '2259b56f5898cd6192c50d338723d9e4';       //开发提前设置好的 token
@@ -56,7 +61,6 @@ class WXController extends Controller
             die("not ok");
         }
     }
-
     public function receiv()
     {
         $log_file = "wx.log";
@@ -74,7 +78,6 @@ class WXController extends Controller
 
         if ($event == 'subscribe') {
             $openid = $xml_obj->FromUserName;  //获取用户的openid
-            Redis::set('openid',$openid);
             $res = wxmodel::where(['openid' => $openid])->first();
 //            dd($res);
             if(!empty($res)) {
@@ -116,7 +119,10 @@ class WXController extends Controller
                         </xml>';
                 echo $response_text;        //回复用户消息
             }
+        }elseif($event=='CLICK'){
+            echo 222;die;
         }
+
         //判断消息类型
         $msg_type = $xml_obj->MsgType;
         $touser = $xml_obj->FromUserName;         //接收消息的用户的id
@@ -257,22 +263,7 @@ class WXController extends Controller
         $response = $client->request('POST',$url,[
             'body'  => $menu_json
         ]);
-
-        $openid=Redis::get('openid');
-
-        $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
-        $user_info = file_get_contents($url);
-        $u = json_decode($user_info, true);
-        $location = $u['city'];
-
-
-
-
-        $weather_url='https://api.heweather.net/s6/weather/now?location='.$location.'&key=f712ec7c6f9f411ab24962eeea845f9d';
-        $data=file_get_contents($weather_url);
         echo '<pre>';print_r($menu);echo '</pre>';
-
-//        echo '<pre>';print_r($menu);echo '</pre>';
         echo $response->getBody();      //接收 微信接口的响应数据
     }
 
