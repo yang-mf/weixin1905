@@ -123,7 +123,11 @@ class WXController extends Controller
             if($xml_obj->EventKey=='weather'){
                 //如果是 获取天气
                 //请求第三方接口 获取天气
-                $weather_api = 'https://free-api.heweather.net/s6/weather/now?location=beijing&key=b2e92f2df77e48b3a36f20e912b796d9';
+                $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $xml_obj->FromUserName . '&lang=zh_CN';
+                $user_info = file_get_contents($url);
+                $u = json_decode($user_info, true);
+                $location=$u['city'];
+                $weather_api = 'https://free-api.heweather.net/s6/weather/now?location='.$location.'&key=b2e92f2df77e48b3a36f20e912b796d9';
                 $weather_info = file_get_contents($weather_api);
                 $weather_info_arr = json_decode($weather_info,true);
 //                print_r($weather_info_arr);die;
