@@ -143,6 +143,8 @@ class WXController extends Controller
                 <Content><![CDATA['. date('Y-m-d H:i:s') .  $msg .']]></Content>
                 </xml>';
                 echo $response_xml;
+            }elseif($xml_obj->EventKey=='1905wx_toupiao'){
+
             }
         }
 
@@ -275,7 +277,7 @@ class WXController extends Controller
                     'key'   => 'weather'
                 ],
                 [
-                    'type'  => 'click',
+                    'type'  => 'view',
                     'name'  => '投票',
                     'key'   => '1905wx_toupiao'
                 ],
