@@ -243,7 +243,7 @@ class WXController extends Controller
                 [
                     'type'  => 'click',
                     'name'  => '获取天气',
-                    'key'   => '1905wx_key'
+                    'key'   => 'weather'
                 ],
                 [
                     'type'  => 'click',
