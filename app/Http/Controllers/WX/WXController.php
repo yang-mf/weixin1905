@@ -8,9 +8,8 @@ use App\wxmodel;
 use App\wx\ImgModel;
 use App\wx\VideoModel;
 use App\wx\VoiceModel;
-use Illuminate\Redis;
 use GuzzleHttp\Client;
-//use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Redis;
 
 
 
