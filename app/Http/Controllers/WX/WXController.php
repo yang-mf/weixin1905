@@ -257,13 +257,16 @@ class WXController extends Controller
         $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $this->access_token . '&openid=' . $openid . '&lang=zh_CN';
         $user_info = file_get_contents($url);
         $u = json_decode($user_info, true);
-        $location = $u[''];
+        $location = $u['city'];
 
 
 
 
-        $weather_url='https://api.heweather.net/s6/weather/now?location=beijing&key=f712ec7c6f9f411ab24962eeea845f9d';
-        echo '<pre>';print_r($menu);echo '</pre>';
+        $weather_url='https://api.heweather.net/s6/weather/now?location='.$location.'&key=f712ec7c6f9f411ab24962eeea845f9d';
+        $data=file_get_contents($weather_url);
+        echo '<pre>';print_r($data);echo '</pre>';
+
+//        echo '<pre>';print_r($menu);echo '</pre>';
         echo $response->getBody();      //接收 微信接口的响应数据
     }
 
