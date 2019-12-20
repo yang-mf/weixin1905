@@ -267,8 +267,8 @@ class WXController extends Controller
      */
     public function createMenu()
     {
-        $redirect_uri = 'http://1905yangmf.comcto.com/vote';
-//        $redirect_uri = urlencode($url);        //授权后跳转页面
+        $url = 'http://1905yangmf.comcto.com/vote';
+        $redirect_uri = urlencode($url);        //授权后跳转页面
 
         //创建自定义菜单的接口地址
         $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$this->access_token;
@@ -282,7 +282,7 @@ class WXController extends Controller
                 [
                     'type'  => 'view',
                     'name'  => '投票',
-                    'url'   =>'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9458fefe0c30d65b&redirect_uri='.$redirect_uri.'&response_type=code&scope=snsapi_base&state=WX1905#wechat_redirect',
+                    'url'   =>'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9458fefe0c30d65b&redirect_uri='.$redirect_uri.'&response_type=code&scope=snsapi_userinfo&state=WX1905#wechat_redirect',
                 ],
             ]
         ];
