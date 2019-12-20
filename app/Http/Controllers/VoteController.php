@@ -21,14 +21,12 @@ class VoteController extends Controller
         $user_info = $this->getUserInfo($data['access_token'],$data['openid']);
         //保存用户信息
         $userinfo_key = 'h:u:'.$data['openid'];
-                echo '<pre>';print_r($user_info);echo '</pre>';
-
         Redis::hMset($userinfo_key,$user_info);
 
 
         // 处理业务逻辑
         $openid = $user_info['openid'];
-        $key = 'ss:vote:'.$user_info[''];
+        $key = 'ss:vote:zhangsan';
         //判断是否已经投过票
         if(Redis::zrank($key,$user_info['openid'])){
             echo "已经投过票了";echo '</br>';
@@ -43,10 +41,7 @@ class VoteController extends Controller
             //$u = Redis::hMget($u_k,['openid','nickname','sex','headimgurl']);
             echo ' <img src="'.$u['headimgurl'].'"> ';
         }
-
-
-
-
+        
     }
 
 
