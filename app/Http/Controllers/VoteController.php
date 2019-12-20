@@ -24,8 +24,8 @@ class VoteController extends Controller
 
     protected function getAccessToken($code)
     {
-        $url=' https://api.weixin.qq.com/sns/oauth2/access_token?appid='.env('appid').'&secret='.env('secret').'&code='.$code.'&grant_type=authorization_code';
-        echo $url;
+        $url='https://api.weixin.qq.com/sns/oauth2/access_token?appid='.env('appid').'&secret='.env('secret').'&code='.$code.'&grant_type=authorization_code';
+        echo $url;die;
         $json_data = file_get_contents($url);
         return json_decode($json_data,true);
     }
@@ -44,7 +44,6 @@ class VoteController extends Controller
             'sex'		=> 1
         ];
         Redis::hMset($key,$user_info);
-        die;
         echo '<hr>';
         $u = Redis::hGetAll($key);
         echo '<pre>';print_r($u);echo '</pre>';
