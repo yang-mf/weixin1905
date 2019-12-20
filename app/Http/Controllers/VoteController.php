@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Redis;
 class VoteController extends Controller
 {
     public function index(){
+        echo '<pre>';print_r($_GET);echo '</pre>';
+
         $code = $_GET['code'];
         //获取access_token
         $data = $this->getAccessToken($code);
