@@ -22,4 +22,10 @@ Route::post('/wx','WX\WXController@receiv');
 Route::get('/wx/menu','WX\WXController@createMenu');        //创建菜单
 
 Route::get('/vote','VoteController@index');
+Route::get('/shop','ShopController@index');
+Route::get('/shop/detail','ShopController@detail');
+
+
+Route::get('/weather','weather@index');
+
 
