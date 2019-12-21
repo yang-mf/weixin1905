@@ -43,7 +43,9 @@ class WxusersController extends AdminController
         $grid->column('create_at', __('Create at'));
         $grid->column('update_at', __('Update at'));
         $grid->column('openid', __('Openid'));
-        $grid->column('style', __('Style'));
+        $grid->column('img', __('img'))->display(function ($img){
+            return '<img src='. $img .' height="50">';
+        });
 
         return $grid;
     }
