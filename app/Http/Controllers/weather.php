@@ -24,7 +24,7 @@ class weather extends Controller
         $msg = $cond_txt . ' 温度： '.$tmp . ' 风向： '. $wind_dir;
 
 
-        $msg_url='https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token=28_tHG645aa9Q25492R3BFnTA2284Bh-Fb0Y2K5UH-d8-GXNSuCUpo-5BkkDlO08Gl_wPzs2rXTJC1sXYN5mqxse3IWJt64yLVkDFbpETPidIQJQquBsymuXOEDnxHf6CFocoHRr7j7Jkd0uzgrTLZeACAYQE';
+        $msg_url='https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token=28_QGpOW8qlW6c9VU3DUeSjUIiyoeLIqQODdUczZgsLqPbHNqeWqbt50yWMK3SmN_gyK8GH1hTto40eCxRlRBITwZnIO6WSA7ElFHKOrzw0NU3FET_h_v7bvPwMs_61UINZ7Ga9ThzaOs3znLPvHAPiAEAXQF';
 
         $msg = date('Y-m-d H:i:s') . $msg;
         $data = [
