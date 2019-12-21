@@ -159,7 +159,7 @@ class WXController extends Controller
 //        dd($media_id);
 
         if ($msg_type == 'text') {
-            $data=['word'=>$content];
+            $data=['word'=>$xml_obj->Content];
             TextModel::insert($data);
             $response_text = '<xml>
         <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
