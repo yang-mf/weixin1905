@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use App\test;
-use App\User;
+use App\test;
+//use App\User;
 use GuzzleHttp\Client;
 
 class weather extends Controller
 {
     public function index()
     {
-        $data=User::all('openid')->toArray();
+        $data=test::all('openid')->toArray();
         $openid=array_column($data,'openid');
 
         $weather_api = 'https://free-api.heweather.net/s6/weather/now?location=beijing&key=b2e92f2df77e48b3a36f20e912b796d9';
