@@ -13,5 +13,8 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('admin.home');
     $router->resource('users', WxusersController::class);
     $router->resource('shop/admin', shopadminController::class);
+    $router->resource('word', TextController::class);
+    $router->resource('picture', ImgController::class);
+    $router->resource('voice', VoiceController::class);
 
 });
