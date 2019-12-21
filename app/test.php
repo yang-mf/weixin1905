@@ -8,4 +8,5 @@ class test extends Model
 {
     public $table='user';
     protected $primaryKey='uid';
+
 }

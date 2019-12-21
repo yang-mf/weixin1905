@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\WX;
 
 use App\Http\Controllers\Controller;
+use App\test;
 use Illuminate\Http\Request;
 use App\wxmodel;
 use App\wx\ImgModel;
 use App\wx\VideoModel;
 use App\wx\VoiceModel;
+use App\wx\TextModel;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Redis;
 
@@ -157,6 +159,7 @@ class WXController extends Controller
 //        dd($media_id);
 
         if ($msg_type == 'text') {
+            TextModel::insert($content);
             $response_text = '<xml>
         <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
         <FromUserName><![CDATA[' . $fromuser . ']]></FromUserName>
