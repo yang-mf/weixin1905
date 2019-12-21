@@ -88,7 +88,10 @@ class WxusersController extends AdminController
         $form->datetime('update_at', __('Update at'))->default(date('Y-m-d H:i:s'));
         $form->text('openid', __('Openid'));
         $form->text('style', __('Style'));
+        $form->ckeditor('content');
 
+// Set config
+        $form->ckeditor('content')->options(['lang' => 'fr', 'height' => 500]);
         return $form;
     }
 }
