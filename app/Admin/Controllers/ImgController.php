@@ -27,9 +27,10 @@ class ImgController extends AdminController
         $grid = new Grid(new ImgModel);
 
         $grid->column('iid', __('Iid'));
-        $grid->column('img', __('Img'))->display(function ($img){
-            return '<img src=/'. $img  .' height=50>';
+        $grid->column('img', __('img'))->display(function ($img){
+            return '<img src='.$img.'>';
         });
+
 
         return $grid;
     }

@@ -55,6 +55,9 @@ class shopadminController extends AdminController
         $show->field('create_at', __('Create at'));
         $show->field('update_at', __('Update at'));
         $show->field('num', __('Num'));
+        $show->column('img', __('img'))->display(function ($img){
+            return '<img src='.$img.'>';
+        });
 
         return $show;
     }
@@ -73,6 +76,9 @@ class shopadminController extends AdminController
         $form->datetime('create_at', __('Create at'))->default(date('Y-m-d H:i:s'));
         $form->datetime('update_at', __('Update at'))->default(date('Y-m-d H:i:s'));
         $form->number('num', __('Num'));
+        $form->column('img', __('img'))->display(function ($img){
+            return '<img src='.$img.'>';
+        });
 
         return $form;
     }

@@ -38,6 +38,7 @@ class WXController extends Controller
         $arr = json_decode($data_json, true);
         Redis::set($key,$arr['access_token']);
         Redis::expire($key,3600);
+        echo $arr['access_token'];die;
         return $arr['access_token'];
     }
     public function phpinfo()
@@ -86,13 +87,13 @@ class WXController extends Controller
 //                dd(11);
                 $content = '欢迎回来';
                 $response_text =
-'<xml>
-    <ToUserName><![CDATA[' . $openid . ']]></ToUserName>
-    <FromUserName><![CDATA[' . $xml_obj->ToUserName . ']]></FromUserName>
-    <CreateTime>' . time() . '</CreateTime> 
-    <MsgType><![CDATA[text]]></MsgType>
-    <Content><![CDATA[' . $content . ']]></Content>
-</xml>';
+                    '<xml>
+                        <ToUserName><![CDATA[' . $openid . ']]></ToUserName>
+                        <FromUserName><![CDATA[' . $xml_obj->ToUserName . ']]></FromUserName>
+                        <CreateTime>' . time() . '</CreateTime> 
+                        <MsgType><![CDATA[text]]></MsgType>
+                        <Content><![CDATA[' . $content . ']]></Content>
+                    </xml>';
 //                dd($response_text);
                 echo $response_text;        //回复用户消息
             } else {
@@ -306,5 +307,8 @@ class WXController extends Controller
         echo $response->getBody();      //接收 微信接口的响应数据
     }
 
-
+    public function access_token()
+    {
+        return $this->access_token;
+    }
 }
