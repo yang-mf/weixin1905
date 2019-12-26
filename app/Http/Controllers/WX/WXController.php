@@ -407,7 +407,8 @@ class WXController extends Controller
             </xml>';
                 echo $xml;          //回复用户的消息
 
-        }elseif($event=='click'){
+        }
+        if($event=='click'){
             if($xml_obj->Eventkey=='ke'){
                 $nickname=wxmodel::where('openid',$openid)->value('nickname');
                 $ke_info=ke::where('openid',$openid)->first();
@@ -428,14 +429,6 @@ class WXController extends Controller
                 }
             }
         }
-
-
-
-    }
-
-    public function control()
-    {
-        return $this->view('test.ke');
     }
 
     public function createMenu()
