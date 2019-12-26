@@ -25,7 +25,7 @@ Route::get('/newyear','WX\WXController@NewYear');        //创建菜单
 Route::get('/wx/getticket','WX\TicketController@getticket');        //二维码
 
 Route::get('/wx/acc','WX\WXController@Newaccess_token');        //二维码
-Route::get('/wx/control','WX\ControlController@index');        //二维码
+Route::get('/wx/control','ControlController@index');        //二维码
 
 
 Route::get('/wx/gettoken','WX\WXController@Getaccess_token');        //access_token
