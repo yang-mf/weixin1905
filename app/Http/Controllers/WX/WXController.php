@@ -433,11 +433,14 @@ class WXController extends Controller
 
     }
 
+    public function control()
+    {
+        return $this->view('test.ke');
+    }
+
     public function createMenu()
     {
-        $url1='http://weixin05.com/wx/class';
         $url2='http://weixin05.com/wx/control';
-        $url1=urlencode($url1);
         $url2=urlencode($url2);
 
         $menu_url='https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.wxmodel::getAccessToken();
