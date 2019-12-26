@@ -433,7 +433,7 @@ class WXController extends Controller
 
     public function createMenu()
     {
-        $url2='http://1905yangmf.comcto.com/wx/control';
+        $url2='http://1905yangmf.comcto.com/control';
         $url2=urlencode($url2);
 
         $menu_url='https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.wxmodel::getAccessToken();
