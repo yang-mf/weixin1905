@@ -16,5 +16,6 @@ Route::group([
     $router->resource('word', TextController::class);
     $router->resource('picture', ImgController::class);
     $router->resource('voice', VoiceController::class);
+    $router->resource('qrcode', QRcodeController::class);
 
 });

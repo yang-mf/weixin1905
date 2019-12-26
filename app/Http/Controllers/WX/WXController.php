@@ -12,18 +12,18 @@ use App\wx\VoiceModel;
 use App\wx\TextModel;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Redis;
+use App\ke;
 
 
 
 class WXController extends Controller
 {
     protected $access_token;
-
+    /*
     public function __construct()
     {
         $this->access_token = $this->getaccess_token();
     }
-
     public function getaccess_token()
     {
         $key = 'wx_access_token';
@@ -38,7 +38,7 @@ class WXController extends Controller
         $arr = json_decode($data_json, true);
         Redis::set($key,$arr['access_token']);
         Redis::expire($key,3600);
-        echo $arr['access_token'];die;
+//        echo $arr['access_token'];die;
         return $arr['access_token'];
     }
     public function phpinfo()
@@ -73,6 +73,7 @@ class WXController extends Controller
         file_put_contents($log_file, $data, FILE_APPEND);//追加写
 
         $xml_obj = simplexml_load_string($xml_str);
+
 
         $event = $xml_obj->Event;
 
@@ -139,12 +140,12 @@ class WXController extends Controller
                 $wind_dir = $weather_info_arr['HeWeather6'][0]['now']['wind_dir'];
                 $msg = $cond_txt . ' 温度： '.$tmp . ' 风向： '. $wind_dir;
                 $response_xml = '<xml>
-                <ToUserName><![CDATA['.$xml_obj->FromUserName.']]></ToUserName>
-                <FromUserName><![CDATA['.$xml_obj->ToUserName.']]></FromUserName>
-                <CreateTime>'.time().'</CreateTime>
-                <MsgType><![CDATA[text]]></MsgType>
-                <Content><![CDATA['. date('Y-m-d H:i:s') .  $msg .']]></Content>
-                </xml>';
+                    <ToUserName><![CDATA['.$xml_obj->FromUserName.']]></ToUserName>
+                    <FromUserName><![CDATA['.$xml_obj->ToUserName.']]></FromUserName>
+                    <CreateTime>'.time().'</CreateTime>
+                    <MsgType><![CDATA[text]]></MsgType>
+                    <Content><![CDATA['. date('Y-m-d H:i:s') .  $msg .']]></Content>
+                    </xml>';
                 echo $response_xml;
             }elseif($xml_obj->EventKey=='1905wx_toupiao'){
 
@@ -163,60 +164,59 @@ class WXController extends Controller
             $data=['word'=>$xml_obj->Content];
             TextModel::insert($data);
             $response_text = '<xml>
-        <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
-        <FromUserName><![CDATA[' . $fromuser . ']]></FromUserName>
-        <CreateTime>' . $time . '</CreateTime> 
-        <MsgType><![CDATA[text]]></MsgType>
-        <Content><![CDATA[' . $content . ']]></Content>
-        </xml>';
+                <ToUserName><![CDATA[' . $touser . ']]></ToUserName>
+                <FromUserName><![CDATA[' . $fromuser . ']]></FromUserName>
+                <CreateTime>' . $time . '</CreateTime> 
+                <MsgType><![CDATA[text]]></MsgType>
+                <Content><![CDATA[' . $content . ']]></Content>
+                </xml>';
             echo $response_text;        //回复用户消息
         }elseif($msg_type=='image'){    // 图片消息
             // TODO 下载图片
             $this->getMedia2($media_id,$msg_type);
             // TODO 回复图片
             $response = '<xml>
-  <ToUserName><![CDATA['.$touser.']]></ToUserName>
-  <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
-  <CreateTime>'.time().'</CreateTime>
-  <MsgType><![CDATA[image]]></MsgType>
-  <Image>
-    <MediaId><![CDATA['.$media_id.']]></MediaId>
-  </Image>
-</xml>';
+              <ToUserName><![CDATA['.$touser.']]></ToUserName>
+              <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
+              <CreateTime>'.time().'</CreateTime>
+              <MsgType><![CDATA[image]]></MsgType>
+              <Image>
+                <MediaId><![CDATA['.$media_id.']]></MediaId>
+              </Image>
+            </xml>';
             echo $response;
         }elseif($msg_type=='voice'){          // 语音消息
             // 下载语音
             $this->getMedia2($media_id,$msg_type);
             // TODO 回复语音
             $response = '<xml>
-  <ToUserName><![CDATA['.$touser.']]></ToUserName>
-  <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
-  <CreateTime>'.time().'</CreateTime>
-  <MsgType><![CDATA[voice]]></MsgType>
-  <Voice>
-    <MediaId><![CDATA['.$media_id.']]></MediaId>
-  </Voice>
-</xml>';
-            echo $response;
+              <ToUserName><![CDATA['.$touser.']]></ToUserName>
+              <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
+              <CreateTime>'.time().'</CreateTime>
+              <MsgType><![CDATA[voice]]></MsgType>
+              <Voice>
+                <MediaId><![CDATA['.$media_id.']]></MediaId>
+              </Voice>
+            </xml>';
+                        echo $response;
         }elseif($msg_type=='video'){
             // 下载小视频
             $this->getMedia2($media_id,$msg_type);
             // 回复
             $response = '<xml>
-  <ToUserName><![CDATA['.$touser.']]></ToUserName>
-  <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
-  <CreateTime>'.time().'</CreateTime>
-  <MsgType><![CDATA[video]]></MsgType>
-  <Video>
-    <MediaId><![CDATA['.$media_id.']]></MediaId>
-    <Title><![CDATA[测试]]></Title>
-    <Description><![CDATA[不可描述]]></Description>
-  </Video>
-</xml>';
+              <ToUserName><![CDATA['.$touser.']]></ToUserName>
+              <FromUserName><![CDATA['.$fromuser.']]></FromUserName>
+              <CreateTime>'.time().'</CreateTime>
+              <MsgType><![CDATA[video]]></MsgType>
+              <Video>
+                <MediaId><![CDATA['.$media_id.']]></MediaId>
+                <Title><![CDATA[测试]]></Title>
+                <Description><![CDATA[不可描述]]></Description>
+              </Video>
+            </xml>';
             echo $response;
         }
     }
-
     public function getMedia($media_id)
     {
 
@@ -229,11 +229,7 @@ class WXController extends Controller
         echo "下载素材成功";echo '</br>';
         echo "文件名： ". $file_name;
     }
-
-
-    /**
-     * 获取素材
-     */
+    //获取素材
     protected function getMedia2($media_id,$media_type)
     {
         $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token='.$this->access_token.'&media_id='.$media_id;
@@ -266,10 +262,7 @@ class WXController extends Controller
         }
         file_put_contents($save_path,$file_content);
     }
-
-    /**
-     * 创建自定义菜单
-     */
+    //创建自定义菜单
     public function createMenu()
     {
         $url = 'http://1905yangmf.comcto.com/vote';
@@ -306,9 +299,180 @@ class WXController extends Controller
         echo '<pre>';print_r($menu);echo '</pre>';
         echo $response->getBody();      //接收 微信接口的响应数据
     }
-
-    public function access_token()
+    //刷新 access_token
+    public function flushAccessToken()
     {
-        return $this->access_token;
+        $key = 'wx_access_token';
+        Redis::del($key);
+        echo $this->getaccess_token();
     }
+    public function NewYear()
+    {
+        $appid=env('appid');
+        $nonceStr=Str::random(8);
+        $timestamp=time();
+        $url=env('APP_URL');
+        $signature=$this->signature($nonceStr,$timestamp,$url);
+        $data=[
+            'appid'         =>$appid,
+            'timestamp'     =>$timestamp,
+            'nonceStr'      =>$nonceStr,
+        ];
+        return view('index.newyear');
+    }
+    public function signature($nonceStr,$timestamp,$url)
+    {
+
+    }*/
+
+
+    public function __construct()
+    {
+        $access_token=$this->Getaccess_token();
+    }
+
+    public function Getaccess_token()
+    {
+        $url='https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.env('appid').'&secret='.env('secret');
+        $data=file_get_contents($url);
+        $data=json_decode($data,true);
+        return $data['access_token'];
+    }
+
+    public function checkSignature()
+    {
+        $signature = $_GET["signature"];
+        $timestamp = $_GET["timestamp"];
+        $nonce = $_GET["nonce"];
+        $echostr=$_GET['echostr'];
+        $tmpArr = array($echostr, $timestamp, $nonce);
+        sort($tmpArr, SORT_STRING);
+        $tmpStr = implode( $tmpArr );
+        $tmpStr = sha1( $tmpStr );
+        if( $tmpStr == $signature ){
+            echo $echostr;
+        }else{
+            echo 'not';die;
+        }
+    }
+
+    public function receiv()
+    {
+        $file_name='newwx_log';
+        $xml=file_get_contents("php://input");
+        $data=date('Y-m-d H:i:s').$xml;
+        file_put_contents($file_name,$data,FILE_APPEND);  //追加写入日志
+        $xml_obj=simplexml_load_string($xml);
+        $openid=$xml_obj->FromUserName;
+        $event=$xml_obj->Event;
+        if($event=='subscribe'){
+            $userinfo=wxmodel::where('openid',$openid)->first();
+            if($userinfo){
+                $nickname=$userinfo['nickname'];
+            }else{
+                $url='https://api.weixin.qq.com/cgi-bin/user/info?access_token='.wxmodel::getAccessToken().'&openid='.$openid.'&lang=zh_CN';
+                $data=file_get_contents($url);
+                $xml_user=json_decode($data);
+                $nickname = $xml_user->nickname;
+                $sex=$xml_user->sex;
+                $sub_time=time();
+                $img=$xml_user->headimgurl;
+                $userinfo=[
+                    'sub_time'      =>$sub_time,
+                    'sex'           =>$sex,
+                    'nickname'      =>$nickname,
+                    'openid'        =>$openid,
+                    'img'           =>$img
+                ];
+                wxmodel::insert($userinfo);
+
+            }
+//            $url='https://api.weixin.qq.com/cgi-bin/user/info?access_token='.wxmodel::getAccessToken().'&openid='.$openid.'&lang=zh_CN';
+//            $data=file_get_contents($url);
+//            dd($data);
+            $content='你好，'.$nickname.'同学你当前的课程安排如下
+             第一节：PHP
+             第二节：语文
+             第三节：数学
+             第四节：英语';
+            $formuser=$xml_obj->ToUserName;
+            $touser=$xml_obj->FromUserName;
+            $time=time();
+                $xml='<xml>
+              <ToUserName><![CDATA['.$touser.']]></ToUserName>
+              <FromUserName><![CDATA['.$formuser.']]></FromUserName>
+              <CreateTime>'.$time.'</CreateTime>
+              <MsgType><![CDATA[text]]></MsgType>
+              <Content><![CDATA['.$content.']]></Content>
+            </xml>';
+                echo $xml;          //回复用户的消息
+
+        }elseif($event=='click'){
+            if($xml_obj->Eventkey=='ke'){
+                $nickname=wxmodel::where('openid',$openid)->value('nickname');
+                $ke_info=ke::where('openid',$openid)->first();
+                if($ke_info){
+                    $content='你好，'.$nickname.'同学,你的课程安排如下
+                    第一节：'.$ke_info['yi'].'
+                    第二节：'.$ke_info['er'].'
+                    第三节：'.$ke_info['san'].'
+                    第四节：'.$ke_info['si'];
+                     echo $content;
+                }else{
+                    $content='你好，'.$nickname.'同学,你的课程安排如下
+                    第一节：PHP
+                    第二节：语文
+                    第三节：数学
+                    第四节：英语';
+                    echo $content;
+                }
+            }
+        }
+
+
+
+    }
+
+    public function createMenu()
+    {
+        $url1='http://weixin05.com/wx/class';
+        $url2='http://weixin05.com/wx/control';
+        $url1=urlencode($url1);
+        $url2=urlencode($url2);
+
+        $menu_url='https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.wxmodel::getAccessToken();
+        $menu= [
+            "button"=> [
+                [
+                    "type"=>    "click",
+                    "name"=>    "查看课程",
+                    "key"=>     "ke",
+                ],
+                [
+                    "type"=>    "view",
+                    "name"=>    "管理课程",
+                    "url"=>     "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9458fefe0c30d65b&redirect_uri='.$url2.'&response_type=code&scope=snsapi_userinfo&state=WX1905#wechat_redirect",
+                ],
+
+            ]
+        ];
+        $menu_json=json_encode($menu,JSON_UNESCAPED_UNICODE);
+        $client= new Client();
+        $response=$client->request('POST',$menu_url,[
+            'body'  =>$menu_json,
+        ]);
+
+        echo "<pre>";print_r($menu);echo "</pre>";
+        echo $response->getBody();
+    }
+
+    //更新access_token
+    public function Newaccess_token(){
+        $key='wx_access_token';
+        Redis::del($key);
+        echo wxmodel::getAccessToken();
+    }
+
+
+
 }

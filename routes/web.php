@@ -21,8 +21,17 @@ Route::get('/phpinfo','WX\WXController@phpinfo');
 Route::post('/wx','WX\WXController@receiv');
 Route::get('/wx/menu','WX\WXController@createMenu');        //创建菜单
 Route::get('/ac','WX\WXController@access_token');        //创建菜单
-
+Route::get('/newyear','WX\WXController@NewYear');        //创建菜单
 Route::get('/wx/getticket','WX\TicketController@getticket');        //二维码
+
+Route::get('/wx/acc','WX\WXController@Newaccess_token');        //二维码
+
+
+Route::get('/wx/gettoken','WX\WXController@Getaccess_token');        //access_token
+Route::get('/newwx','WX\WXController@checkSignature');
+//Route::post('/newwx','WX\WXController@receiv');   //
+
+
 
 Route::get('/vote','VoteController@index');
 Route::get('/shop','ShopController@index');
