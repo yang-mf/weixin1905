@@ -25,7 +25,7 @@ Route::get('/newyear','WX\WXController@NewYear');        //创建菜单
 Route::get('/wx/getticket','WX\TicketController@getticket');        //二维码
 
 Route::get('/wx/acc','WX\WXController@Newaccess_token');
-Route::get('/control','ControlController@index');
+
 
 Route::get('/wx/gettoken','WX\WXController@Getaccess_token');        //access_token
 Route::get('/newwx','WX\WXController@checkSignature');
@@ -33,6 +33,8 @@ Route::get('/newwx','WX\WXController@checkSignature');
 
 
 
+
+Route::get('/control','ControlController@index');
 Route::get('/vote','VoteController@index');
 Route::get('/shop','ShopController@index');
 Route::get('/shop/detail','ShopController@detail');
